@@ -1,6 +1,3 @@
-# codeman
-A code generator developed by Anil GR
-
 ---
 license: apache-2.0
 title: 'Codeman: An App to generate code'
