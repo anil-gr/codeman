@@ -1,16 +1,14 @@
 import requests
 import json
 import gradio as gr
+import os
 
 # Server URL and headers
-url = "http://localhost:11434/api/generate"
+# Allow URL to be configurable via an environment variable for flexibility
+url = os.getenv("SERVER_URL", "http://localhost:11434/api/generate")
 headers = {
     "Content-Type": "application/json"
 }
-
-# History to track prompts
-history = []
-
 
 # History to track prompts
 history = []
@@ -38,8 +36,8 @@ def generate_response(prompt):
     try:
         # Send the POST request and enable streaming
         response = requests.post(
-            url="http://localhost:11434/api/generate",
-            headers={"Content-Type": "application/json"},
+            url=url,
+            headers=headers,
             data=json.dumps(data),
             stream=True,  # Enable streaming
         )
@@ -57,9 +55,18 @@ def generate_response(prompt):
                     break
 
         return full_response
+
+    except requests.exceptions.RequestException as req_err:
+        # Handle connection-related errors
+        return f"Connection error: {req_err}"
+
+    except json.JSONDecodeError as json_err:
+        # Handle JSON parsing errors
+        return f"Error decoding response: {json_err}"
+
     except Exception as e:
-        # Handle unexpected errors
-        return f"An error occurred: {str(e)}"
+        # Handle other unexpected errors
+        return f"An unexpected error occurred: {str(e)}"
 
 
 # Gradio interface for the front end
