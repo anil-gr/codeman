@@ -69,4 +69,4 @@ interface = gr.Interface(
 
 # Launch the Gradio app
 if __name__ == "__main__":
-    interface.launch(share-True)
+    interface.launch(share=True)
